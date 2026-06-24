@@ -16,6 +16,7 @@ interface CarouselItem {
 export default function RangeCarousel() {
     const [activeIndex, setActiveIndex] = useState(1);
     const [isHovered, setIsHovered] = useState(false);
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
     const tooltipRef = useRef<HTMLDivElement>(null);
 
@@ -52,6 +53,24 @@ export default function RangeCarousel() {
 
     const handleNext = () => {
         setActiveIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
+    };
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchStartX(e.touches[0].clientX);
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (touchStartX === null) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const diffX = touchStartX - touchEndX;
+
+        // Threshold of 50px to prevent accidental swipes
+        if (diffX > 50) {
+            handleNext();
+        } else if (diffX < -50) {
+            handlePrev();
+        }
+        setTouchStartX(null);
     };
 
     // Auto-slide effect (ticks every 4 seconds, pauses on mouse hover)
@@ -104,7 +123,11 @@ export default function RangeCarousel() {
             </div>
 
             {/* 3D Carousel Container (True screen-edge-to-screen-edge layout with an even more spacious gap from the heading) */}
-            <div className="relative w-full h-[360px] md:h-[480px] z-10 flex items-center justify-center overflow-visible mt-16 md:mt-48">
+            <div
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                className="relative w-full h-[360px] md:h-[480px] z-10 flex items-center justify-center overflow-visible mt-16 md:mt-48"
+            >
                 {items.map((item, index) => {
                     let positionClass = "";
                     let isActive = false;
