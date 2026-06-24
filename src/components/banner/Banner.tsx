@@ -47,23 +47,22 @@ export default function HeadphoneBanner() {
             });
         }
 
-        const handleMouseMove = (e: MouseEvent) => {
-            if (window.innerWidth < 768) return;
+        const handleMove = (clientX: number, clientY: number) => {
             const rect = banner.getBoundingClientRect();
 
-            // Calculate if cursor is within the vertical proximity of the banner (with 350px buffer)
+            // Calculate if cursor/touch is within the vertical proximity of the banner (with 350px buffer)
             const verticalBuffer = 350;
             const isNearBanner =
-                e.clientY >= rect.top - verticalBuffer &&
-                e.clientY <= rect.bottom + verticalBuffer;
+                clientY >= rect.top - verticalBuffer &&
+                clientY <= rect.bottom + verticalBuffer;
 
             if (isNearBanner) {
-                // Calculate cursor offsets relative to the banner
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                // Calculate offsets relative to the banner
+                const x = (clientX - rect.left) / rect.width - 0.5;
+                const y = (clientY - rect.top) / rect.height - 0.5;
 
-                const mouseX = e.clientX - rect.left - rect.width / 2;
-                const mouseY = e.clientY - rect.top - rect.height / 2;
+                const mouseX = clientX - rect.left - rect.width / 2;
+                const mouseY = clientY - rect.top - rect.height / 2;
 
                 gsap.to(headphone, {
                     x: x * 65,
@@ -73,7 +72,7 @@ export default function HeadphoneBanner() {
                     overwrite: "auto",
                 });
 
-                // Smoothly move glow to follow the cursor
+                // Smoothly move glow to follow the cursor/touch
                 gsap.to(glow, {
                     opacity: 0.3,
                     x: mouseX,
@@ -84,6 +83,18 @@ export default function HeadphoneBanner() {
                 });
             } else {
                 handleReset();
+            }
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            if (window.innerWidth < 768) return;
+            handleMove(e.clientX, e.clientY);
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (window.innerWidth < 768) return;
+            if (e.touches && e.touches[0]) {
+                handleMove(e.touches[0].clientX, e.touches[0].clientY);
             }
         };
 
@@ -99,10 +110,12 @@ export default function HeadphoneBanner() {
             });
         };
 
-        // Track cursor globally on the window to support movement in the margins/paddings
+        // Track cursor and touch globally on the window to support movement in the margins/paddings
         window.addEventListener("mousemove", handleMouseMove);
-        // Reset if the cursor leaves the window
+        window.addEventListener("touchmove", handleTouchMove, { passive: true });
+        // Reset if the cursor leaves the window or touch ends
         document.addEventListener("mouseleave", handleReset);
+        window.addEventListener("touchend", handleReset);
 
         // Handle resize to dynamically clear/apply GSAP styles
         const handleResize = () => {
@@ -123,7 +136,9 @@ export default function HeadphoneBanner() {
 
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("touchmove", handleTouchMove);
             document.removeEventListener("mouseleave", handleReset);
+            window.removeEventListener("touchend", handleReset);
             window.removeEventListener("resize", handleResize);
         };
     }, []);
