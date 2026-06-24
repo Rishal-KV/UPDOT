@@ -17,6 +17,13 @@ export default function SoundCustomizer() {
     const [treble, setTreble] = useState(70);
     const [activePreset, setActivePreset] = useState("Signature");
 
+    // Check if any slider is maxed out at 100%
+    const isMaxed = bass === 100 || mids === 100 || treble === 100;
+    const maxedFeatures: string[] = [];
+    if (bass === 100) maxedFeatures.push("BASS");
+    if (mids === 100) maxedFeatures.push("MIDS");
+    if (treble === 100) maxedFeatures.push("TREBLE");
+
     const bassSliderRef = useRef<HTMLInputElement>(null);
     const midsSliderRef = useRef<HTMLInputElement>(null);
     const trebleSliderRef = useRef<HTMLInputElement>(null);
@@ -81,9 +88,15 @@ export default function SoundCustomizer() {
         let phase = 0;
 
         const updateWaveform = () => {
-            phase += 0.05 + (treble / 1000); // Treble controls wave speed/frequency
-            const amp1 = 15 + (bass / 4);     // Bass controls wave amplitude
-            const amp2 = 10 + (mids / 5);     // Mids control secondary wave amplitude
+            const currentMaxed = bass === 100 || mids === 100 || treble === 100;
+            phase += (0.05 + (treble / 1000)) * (currentMaxed ? 1.4 : 1.0); // Treble controls wave speed/frequency (faster when maxed)
+            
+            // When maxed, the audio waves get physically compressed/squeezed due to acoustic compression
+            const squeezeFactor = currentMaxed ? 0.45 : 1.0;
+            const frequencyMultiplier = currentMaxed ? 1.8 : 1.0;
+
+            const amp1 = (15 + (bass / 4)) * squeezeFactor;     // Bass controls wave amplitude
+            const amp2 = (10 + (mids / 5)) * squeezeFactor;     // Mids control secondary wave amplitude
 
             const points1 = [];
             const points2 = [];
@@ -92,8 +105,8 @@ export default function SoundCustomizer() {
             for (let i = 0; i <= steps; i++) {
                 const x = (i / steps) * 400;
                 // Complex wave equation combining sine and cosine
-                const y1 = 60 + Math.sin(i * 0.15 + phase) * amp1 * Math.sin(i * 0.05);
-                const y2 = 60 + Math.cos(i * 0.2 + phase * 0.8) * amp2 * Math.sin(i * 0.08);
+                const y1 = 60 + Math.sin(i * 0.15 * frequencyMultiplier + phase) * amp1 * Math.sin(i * 0.05);
+                const y2 = 60 + Math.cos(i * 0.2 * frequencyMultiplier + phase * 0.8) * amp2 * Math.sin(i * 0.08);
 
                 points1.push(`${i === 0 ? "M" : "L"} ${x} ${y1}`);
                 points2.push(`${i === 0 ? "M" : "L"} ${x} ${y2}`);
@@ -132,8 +145,18 @@ export default function SoundCustomizer() {
                     </div>
 
                     {/* Real-time Dynamic Waveform Screen */}
-                    <div className="relative w-full max-w-[400px] h-[140px] bg-neutral-900/50 border border-white/5 rounded-2xl flex items-center justify-center overflow-hidden">
-                        <div className="absolute inset-0 bg-radial-gradient from-[#f26e11]/5 via-transparent to-transparent pointer-events-none" />
+                    <div 
+                        className={`relative w-full max-w-[400px] h-[140px] bg-neutral-900/50 rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-500 ease-out border ${
+                            isMaxed 
+                                ? "border-[#f26e11] shadow-[0_0_35px_rgba(242,110,17,0.35)] scale-y-90 -skew-x-6 origin-center" 
+                                : "border-white/5"
+                        }`}
+                    >
+                        <div className={`absolute inset-0 bg-radial-gradient from-[#f26e11]/10 via-transparent to-transparent pointer-events-none transition-opacity duration-500 ${isMaxed ? "opacity-100" : "opacity-40"}`} />
+                        
+                        {/* Scanline & grid overlay for cyber audio aesthetic */}
+                        <div className={`absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[size:100%_4px,6px_100%] pointer-events-none transition-opacity duration-500 ${isMaxed ? "opacity-100" : "opacity-30"}`} />
+
                         <svg viewBox="0 0 400 120" className="w-full h-full">
                             {/* Wave 1 (Primary Orange Wave) */}
                             <path
@@ -155,11 +178,24 @@ export default function SoundCustomizer() {
                             />
                         </svg>
 
+                        {/* 100% Squeezed Warning Box */}
+                        {isMaxed && (
+                            <div className="absolute top-3 left-4 bg-[#f26e11]/10 border border-[#f26e11]/40 px-2.5 py-1 rounded-md flex items-center gap-1.5 backdrop-blur-md animate-pulse">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                </span>
+                                <span className="text-[8px] font-bold tracking-[0.15em] font-mono text-white uppercase">
+                                    {maxedFeatures.join(" + ")} 100% SQUEEZED
+                                </span>
+                            </div>
+                        )}
+
                         {/* Real-time Status Indicator */}
                         <div className="absolute bottom-3 right-4 flex items-center gap-1.5">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#f26e11] animate-pulse" />
+                            <span className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${isMaxed ? "bg-red-500 animate-ping" : "bg-[#f26e11] animate-pulse"}`} />
                             <span className="text-[9px] tracking-[0.15em] font-mono text-neutral-500 uppercase">
-                                Driver Live
+                                {isMaxed ? "Overdrive" : "Driver Live"}
                             </span>
                         </div>
                     </div>
@@ -212,7 +248,11 @@ export default function SoundCustomizer() {
                                     }}
                                 />
                             </div>
-                            <span className="text-[11px] font-mono font-bold text-white w-8 text-center">
+                            <span className={`text-[11px] font-mono font-bold w-8 text-center transition-all duration-300 ${
+                                bass === 100 
+                                    ? "text-[#f26e11] drop-shadow-[0_0_8px_rgba(242,110,17,0.8)] scale-110" 
+                                    : "text-white"
+                            }`}>
                                 {bass}%
                             </span>
                         </div>
@@ -239,7 +279,11 @@ export default function SoundCustomizer() {
                                     }}
                                 />
                             </div>
-                            <span className="text-[11px] font-mono font-bold text-white w-8 text-center">
+                            <span className={`text-[11px] font-mono font-bold w-8 text-center transition-all duration-300 ${
+                                mids === 100 
+                                    ? "text-[#f26e11] drop-shadow-[0_0_8px_rgba(242,110,17,0.8)] scale-110" 
+                                    : "text-white"
+                            }`}>
                                 {mids}%
                             </span>
                         </div>
@@ -266,7 +310,11 @@ export default function SoundCustomizer() {
                                     }}
                                 />
                             </div>
-                            <span className="text-[11px] font-mono font-bold text-white w-8 text-center">
+                            <span className={`text-[11px] font-mono font-bold w-8 text-center transition-all duration-300 ${
+                                treble === 100 
+                                    ? "text-[#f26e11] drop-shadow-[0_0_8px_rgba(242,110,17,0.8)] scale-110" 
+                                    : "text-white"
+                            }`}>
                                 {treble}%
                             </span>
                         </div>

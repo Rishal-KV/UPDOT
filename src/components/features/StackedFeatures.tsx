@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,6 +13,18 @@ if (typeof window !== "undefined") {
 }
 
 export default function StackedFeatures() {
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        // Safe client-side window measurement
+        setIsDesktop(window.innerWidth >= 768);
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth >= 768);
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const sectionRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const cardsParentRef = useRef<HTMLDivElement>(null);
@@ -42,212 +54,214 @@ export default function StackedFeatures() {
 
         if (!section || !container || !cardsParent || !c0 || !c1 || !c2 || !c3) return;
 
-        const cards = [c0, c1, c2, c3];
+        // Use gsap.matchMedia to elegantly run animations only on desktop (>= 768px)
+        const mm = gsap.matchMedia();
 
-        // 1. Initial Position setup
-        // Card 0 is fully visible by default at the top of the stack.
-        // Cards 1, 2, 3 are positioned off-screen (translated down by 110%)
-        gsap.set([c1, c2, c3], {
-            yPercent: 115,
-            opacity: 0.95
-        });
-
-        // 2. 3D Tilt effect on Card 0 (Hero Card)
-        const handleMouseMove = (e: MouseEvent) => {
-            const rect = c0.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
-            const y = (e.clientY - rect.top) / rect.height - 0.5; // -0.5 to 0.5
-
-            gsap.to(c0, {
-                rotateY: x * 8,
-                rotateX: -y * 8,
-                transformPerspective: 1200,
-                duration: 0.5,
-                ease: "power2.out",
-                overwrite: "auto",
+        mm.add("(min-width: 768px)", () => {
+            // 1. Initial Position setup
+            // Cards 1, 2, 3 are positioned off-screen (translated down by 115%) on desktop
+            gsap.set([c1, c2, c3], {
+                yPercent: 115,
+                opacity: 0.95
             });
 
-            if (card0ImageRef.current) {
-                gsap.to(card0ImageRef.current, {
-                    x: x * 25,
-                    y: y * 25,
+            // 2. 3D Tilt effect on Card 0 (Hero Card)
+            const handleMouseMove = (e: MouseEvent) => {
+                const rect = c0.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+                const y = (e.clientY - rect.top) / rect.height - 0.5; // -0.5 to 0.5
+
+                gsap.to(c0, {
+                    rotateY: x * 8,
+                    rotateX: -y * 8,
+                    transformPerspective: 1200,
                     duration: 0.5,
                     ease: "power2.out",
                     overwrite: "auto",
                 });
-            }
 
-            const glow = c0.querySelector(".card-glow") as HTMLDivElement;
-            if (glow) {
-                const glowX = e.clientX - rect.left - 150;
-                const glowY = e.clientY - rect.top - 150;
-                gsap.to(glow, {
-                    x: glowX,
-                    y: glowY,
-                    opacity: 0.2,
-                    duration: 0.4,
-                    overwrite: "auto",
-                });
-            }
-        };
+                if (card0ImageRef.current) {
+                    gsap.to(card0ImageRef.current, {
+                        x: x * 25,
+                        y: y * 25,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        overwrite: "auto",
+                    });
+                }
 
-        const handleMouseLeave = () => {
-            gsap.to(c0, {
-                rotateY: 0,
-                rotateX: 0,
-                duration: 0.8,
-                ease: "power3.out",
-                overwrite: "auto",
-            });
+                const glow = c0.querySelector(".card-glow") as HTMLDivElement;
+                if (glow) {
+                    const glowX = e.clientX - rect.left - 150;
+                    const glowY = e.clientY - rect.top - 150;
+                    gsap.to(glow, {
+                        x: glowX,
+                        y: glowY,
+                        opacity: 0.2,
+                        duration: 0.4,
+                        overwrite: "auto",
+                    });
+                }
+            };
 
-            if (card0ImageRef.current) {
-                gsap.to(card0ImageRef.current, {
-                    x: 0,
-                    y: 0,
+            const handleMouseLeave = () => {
+                gsap.to(c0, {
+                    rotateY: 0,
+                    rotateX: 0,
                     duration: 0.8,
                     ease: "power3.out",
                     overwrite: "auto",
                 });
-            }
 
-            const glow = c0.querySelector(".card-glow") as HTMLDivElement;
-            if (glow) {
-                gsap.to(glow, {
-                    opacity: 0,
+                if (card0ImageRef.current) {
+                    gsap.to(card0ImageRef.current, {
+                        x: 0,
+                        y: 0,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        overwrite: "auto",
+                    });
+                }
+
+                const glow = c0.querySelector(".card-glow") as HTMLDivElement;
+                if (glow) {
+                    gsap.to(glow, {
+                        opacity: 0,
+                        duration: 0.6,
+                        overwrite: "auto",
+                    });
+                }
+            };
+
+            c0.addEventListener("mousemove", handleMouseMove);
+            c0.addEventListener("mouseleave", handleMouseLeave);
+
+            // 3. Stacking ScrollTrigger timeline
+            const pinDistance = window.innerHeight * 2.5;
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: container,
+                    start: "top 8%", // pin when the container gets close to the top
+                    end: `+=${pinDistance}`,
+                    pin: true,
+                    scrub: 1, // smooth scroll scrubbing
+                    invalidateOnRefresh: true,
+                    anticipatePin: 1,
+                }
+            });
+
+            // --- TRANSITION 1: Card 1 slides up over Card 0 ---
+            tl.to(c1, {
+                yPercent: 0,
+                opacity: 1,
+                ease: "none",
+                duration: 1,
+            }, 0);
+
+            tl.to(c0, {
+                scale: 0.93,
+                opacity: 0.4,
+                y: -35,
+                ease: "none",
+                duration: 1,
+            }, 0);
+
+            // Animate inside Card 1 (Soundwave bars pop up and grow)
+            if (card1WaveBarsRef.current) {
+                const bars = card1WaveBarsRef.current.children;
+                tl.fromTo(bars, {
+                    scaleY: 0.1,
+                }, {
+                    scaleY: 1,
+                    stagger: 0.05,
                     duration: 0.6,
-                    overwrite: "auto",
-                });
+                    ease: "power2.out",
+                }, 0.3);
             }
-        };
 
-        c0.addEventListener("mousemove", handleMouseMove);
-        c0.addEventListener("mouseleave", handleMouseLeave);
+            // --- TRANSITION 2: Card 2 slides up over Card 1 ---
+            tl.to(c2, {
+                yPercent: 0,
+                opacity: 1,
+                ease: "none",
+                duration: 1,
+            }, 1);
 
-        // 3. Stacking ScrollTrigger timeline
-        // The scroll distance depends on the number of cards to stack (3 transitions)
-        // Adjust pin distance dynamically based on screen height for a consistent speed
-        const pinDistance = window.innerHeight * 2.5;
+            tl.to(c1, {
+                scale: 0.93,
+                opacity: 0.4,
+                y: -35,
+                ease: "none",
+                duration: 1,
+            }, 1);
 
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: container,
-                start: "top 8%", // pin when the container gets close to the top
-                end: `+=${pinDistance}`,
-                pin: true,
-                scrub: 1, // smooth scroll scrubbing
-                invalidateOnRefresh: true,
-                anticipatePin: 1,
+            tl.to(c0, {
+                scale: 0.86,
+                opacity: 0.15,
+                y: -70,
+                ease: "none",
+                duration: 1,
+            }, 1);
+
+            // Animate inside Card 2 (Battery fill charging)
+            if (card2BatteryFillRef.current) {
+                tl.fromTo(card2BatteryFillRef.current, {
+                    width: "0%",
+                }, {
+                    width: "85%",
+                    duration: 0.7,
+                    ease: "power3.out",
+                }, 1.3);
             }
+
+            // --- TRANSITION 3: Card 3 slides up over Card 2 ---
+            tl.to(c3, {
+                yPercent: 0,
+                opacity: 1,
+                ease: "none",
+                duration: 1,
+            }, 2);
+
+            tl.to(c2, {
+                scale: 0.93,
+                opacity: 0.4,
+                y: -35,
+                ease: "none",
+                duration: 1,
+            }, 2);
+
+            tl.to(c1, {
+                scale: 0.86,
+                opacity: 0.15,
+                y: -70,
+                ease: "none",
+                duration: 1,
+            }, 2);
+
+            // Animate inside Card 3 (Transducer rotates faster and glows)
+            if (card3TransducerRef.current) {
+                tl.fromTo(card3TransducerRef.current, {
+                    rotation: 0,
+                    scale: 0.9,
+                }, {
+                    rotation: 180,
+                    scale: 1,
+                    duration: 0.8,
+                    ease: "power2.out",
+                }, 2.3);
+            }
+
+            // Cleanup when media query stops matching
+            return () => {
+                c0.removeEventListener("mousemove", handleMouseMove);
+                c0.removeEventListener("mouseleave", handleMouseLeave);
+            };
         });
 
-        // --- TRANSITION 1: Card 1 slides up over Card 0 ---
-        tl.to(c1, {
-            yPercent: 0,
-            opacity: 1,
-            ease: "none",
-            duration: 1,
-        }, 0);
-
-        tl.to(c0, {
-            scale: 0.93,
-            opacity: 0.4,
-            y: -35,
-            ease: "none",
-            duration: 1,
-        }, 0);
-
-        // Animate inside Card 1 (Soundwave bars pop up and grow)
-        if (card1WaveBarsRef.current) {
-            const bars = card1WaveBarsRef.current.children;
-            tl.fromTo(bars, {
-                scaleY: 0.1,
-            }, {
-                scaleY: 1,
-                stagger: 0.05,
-                duration: 0.6,
-                ease: "power2.out",
-            }, 0.3);
-        }
-
-        // --- TRANSITION 2: Card 2 slides up over Card 1 ---
-        tl.to(c2, {
-            yPercent: 0,
-            opacity: 1,
-            ease: "none",
-            duration: 1,
-        }, 1);
-
-        tl.to(c1, {
-            scale: 0.93,
-            opacity: 0.4,
-            y: -35,
-            ease: "none",
-            duration: 1,
-        }, 1);
-
-        tl.to(c0, {
-            scale: 0.86,
-            opacity: 0.15,
-            y: -70,
-            ease: "none",
-            duration: 1,
-        }, 1);
-
-        // Animate inside Card 2 (Battery fill charging)
-        if (card2BatteryFillRef.current) {
-            tl.fromTo(card2BatteryFillRef.current, {
-                width: "0%",
-            }, {
-                width: "85%",
-                duration: 0.7,
-                ease: "power3.out",
-            }, 1.3);
-        }
-
-        // --- TRANSITION 3: Card 3 slides up over Card 2 ---
-        tl.to(c3, {
-            yPercent: 0,
-            opacity: 1,
-            ease: "none",
-            duration: 1,
-        }, 2);
-
-        tl.to(c2, {
-            scale: 0.93,
-            opacity: 0.4,
-            y: -35,
-            ease: "none",
-            duration: 1,
-        }, 2);
-
-        tl.to(c1, {
-            scale: 0.86,
-            opacity: 0.15,
-            y: -70,
-            ease: "none",
-            duration: 1,
-        }, 2);
-
-        // Animate inside Card 3 (Transducer rotates faster and glows)
-        if (card3TransducerRef.current) {
-            tl.fromTo(card3TransducerRef.current, {
-                rotation: 0,
-                scale: 0.9,
-            }, {
-                rotation: 180,
-                scale: 1,
-                duration: 0.8,
-                ease: "power2.out",
-            }, 2.3);
-        }
-
-        // Cleanup
+        // Cleanup the matchMedia instance on unmount
         return () => {
-            c0.removeEventListener("mousemove", handleMouseMove);
-            c0.removeEventListener("mouseleave", handleMouseLeave);
-            if (ScrollTrigger.getById(container.id)) {
-                ScrollTrigger.getById(container.id)?.kill();
-            }
+            mm.revert();
         };
     }, []);
 
@@ -258,7 +272,7 @@ export default function StackedFeatures() {
         >
             <div
                 ref={containerRef}
-                className="w-full flex flex-col items-center justify-start h-[90vh] max-h-[800px] overflow-hidden"
+                className="w-full flex flex-col items-center justify-start h-auto md:h-[90vh] md:max-h-[800px] md:overflow-hidden"
             >
                 {/* Header / Titles */}
                 <div className="flex flex-col items-center text-center gap-2.5 section-body-gapp px-4 z-30 shrink-0">
@@ -279,13 +293,13 @@ export default function StackedFeatures() {
                 {/* Cards Stack Parent (This acts as the deck window) */}
                 <div
                     ref={cardsParentRef}
-                    className="relative w-full max-w-[1200px] flex-grow px-3 md:px-6 h-[460px] md:h-[500px] max-h-[500px] mb-8"
+                    className="relative w-full max-w-[1200px] flex-grow px-3 md:px-6 flex flex-col md:block gap-6 md:gap-0 h-auto md:h-[500px] md:max-h-[500px] mb-8"
                     style={{ perspective: 1200 }}
                 >
                     <div
                         ref={card0Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-10 transition-colors duration-300"
-                        style={{ transformStyle: typeof window !== "undefined" && window.innerWidth >= 768 ? "preserve-3d" : "flat" }}
+                        className="relative md:absolute md:inset-x-6 md:top-0 md:bottom-0 w-full md:w-auto min-h-[380px] md:min-h-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-10 transition-colors duration-300"
+                        style={{ transformStyle: isDesktop ? "preserve-3d" : "flat" }}
                     >
                         {/* Magnetic Glow inside card */}
                         <div className="card-glow absolute h-[300px] w-[300px] rounded-full bg-[#f26e11] blur-[90px] opacity-0 pointer-events-none" />
@@ -325,7 +339,7 @@ export default function StackedFeatures() {
                     {/* CARD 1: Active Noise Cancelling */}
                     <div
                         ref={card1Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-20 hover:border-[#f26e11]/30 transition-colors duration-300"
+                        className="relative md:absolute md:inset-x-6 md:top-0 md:bottom-0 w-full md:w-auto min-h-[380px] md:min-h-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-20 hover:border-[#f26e11]/30 transition-colors duration-300"
                     >
                         {/* Ambient glow in corner */}
                         <div className="absolute -right-24 -top-24 h-56 w-56 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
@@ -378,7 +392,7 @@ export default function StackedFeatures() {
                     {/* CARD 2: Battery Power Reserve */}
                     <div
                         ref={card2Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-30 hover:border-[#f26e11]/30 transition-colors duration-300"
+                        className="relative md:absolute md:inset-x-6 md:top-0 md:bottom-0 w-full md:w-auto min-h-[380px] md:min-h-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-30 hover:border-[#f26e11]/30 transition-colors duration-300"
                     >
                         <div className="absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
 
@@ -416,7 +430,7 @@ export default function StackedFeatures() {
                                     <div
                                         ref={card2BatteryFillRef}
                                         className="h-full bg-[#f26e11] rounded-full"
-                                        style={{ width: "0%" }}
+                                        style={{ width: "85%" }}
                                     />
                                 </div>
                                 <div className="flex justify-between items-center text-[9px] md:text-[10px] text-neutral-400 font-mono">
@@ -437,7 +451,7 @@ export default function StackedFeatures() {
                     {/* CARD 3: Beryllium Transducer */}
                     <div
                         ref={card3Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-40 hover:border-[#f26e11]/30 transition-colors duration-300"
+                        className="relative md:absolute md:inset-x-6 md:top-0 md:bottom-0 w-full md:w-auto min-h-[380px] md:min-h-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-40 hover:border-[#f26e11]/30 transition-colors duration-300"
                     >
                         <div className="absolute -right-24 -bottom-24 h-56 w-56 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
 

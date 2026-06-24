@@ -145,7 +145,7 @@ export default function HeadphoneBanner() {
                 {/* Hover Glow */}
                 <div
                     ref={glowRef}
-                    className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f26e11] blur-[140px] opacity-30"
+                    className="hidden md:block absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f26e11] blur-[140px] opacity-30"
                 />
             </div>
 
