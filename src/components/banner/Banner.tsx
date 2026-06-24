@@ -17,9 +17,9 @@ export default function HeadphoneBanner() {
         if (!banner || !headphone || !glow) return;
 
         const checkLayout = () => {
-            const isDesktop = window.innerWidth >= 768;
+            const isDesktop = window.innerWidth >= 1024;
             if (!isDesktop) {
-                // Clear any GSAP inline styles on mobile to ensure clean CSS layout
+                // Clear any GSAP inline styles on mobile/tablet to ensure clean CSS layout
                 gsap.set([headphone, glow, banner], { clearProps: "all" });
                 return false;
             }
@@ -87,19 +87,19 @@ export default function HeadphoneBanner() {
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-            if (window.innerWidth < 768) return;
+            if (window.innerWidth < 1024) return;
             handleMove(e.clientX, e.clientY);
         };
 
         const handleTouchMove = (e: TouchEvent) => {
-            if (window.innerWidth < 768) return;
+            if (window.innerWidth < 1024) return;
             if (e.touches && e.touches[0]) {
                 handleMove(e.touches[0].clientX, e.touches[0].clientY);
             }
         };
 
         const handleReset = () => {
-            if (window.innerWidth < 768) return;
+            if (window.innerWidth < 1024) return;
             gsap.to(headphone, {
                 x: 0,
                 y: 0,
@@ -146,7 +146,7 @@ export default function HeadphoneBanner() {
     return (
         <section
             ref={bannerRef}
-            className="relative w-full max-w-[1400px] h-auto min-h-[500px] md:h-[580px] flex flex-col md:block items-center justify-center overflow-visible select-none cursor-pointer py-10 md:py-0"
+            className="relative w-full max-w-[1400px] h-auto min-h-[500px] lg:h-[580px] flex flex-col lg:block items-center justify-center overflow-visible select-none cursor-pointer py-10 lg:py-0"
         >
             {/* Background Panel with Premium Clip Path */}
             <div
@@ -160,12 +160,12 @@ export default function HeadphoneBanner() {
                 {/* Hover Glow */}
                 <div
                     ref={glowRef}
-                    className="hidden md:block absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f26e11] blur-[140px] opacity-30"
+                    className="hidden lg:block absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f26e11] blur-[140px] opacity-30"
                 />
             </div>
 
             {/* Logo (Top Center on Desktop, relative on Mobile) */}
-            <div className="relative md:absolute top-0 md:top-8 left-0 md:left-1/2 md:-translate-x-1/2 flex items-center justify-center gap-2.5 text-xs tracking-[5px] text-white/95 font-medium font-schein mb-8 md:mb-0 z-30">
+            <div className="relative lg:absolute top-0 lg:top-8 left-0 lg:left-1/2 lg:-translate-x-1/2 flex items-center justify-center gap-2.5 text-xs tracking-[5px] text-white/95 font-medium font-schein mb-8 lg:mb-0 z-30">
                 <svg
                     className="w-4 h-4 text-white"
                     viewBox="0 0 24 24"
@@ -182,19 +182,19 @@ export default function HeadphoneBanner() {
             </div>
 
             {/* Heading ("MODEL XRS" in Schein Sans, layered in the background, shifted left) */}
-            <div className="relative md:absolute inset-y-0 left-0 w-full md:w-[72%] z-10 flex flex-col items-center justify-center pointer-events-none md:-translate-y-10 mt-4 md:mt-0">
-                <h1 className="text-6xl sm:text-8xl md:text-[120px] font-medium text-white tracking-[-0.05em] leading-[1.1] md:leading-[1] font-schein">
+            <div className="relative lg:absolute inset-y-0 left-0 w-full lg:w-[72%] z-10 flex flex-col items-center justify-center pointer-events-none lg:-translate-y-10 mt-4 lg:mt-0">
+                <h1 className="text-6xl sm:text-8xl lg:text-[120px] font-medium text-white tracking-[-0.05em] leading-[1.1] lg:leading-[1] font-schein">
                     MODEL
                 </h1>
-                <h1 className="text-6xl sm:text-8xl md:text-[120px] font-medium text-white tracking-[-0.05em] leading-[1.1] md:leading-[1] font-schein">
+                <h1 className="text-6xl sm:text-8xl lg:text-[120px] font-medium text-white tracking-[-0.05em] leading-[1.1] lg:leading-[1] font-schein">
                     XRS
                 </h1>
             </div>
 
-            {/* Headphone Image Wrapper (Relative on Mobile, Absolute on Desktop) */}
+            {/* Headphone Image Wrapper (Relative on Mobile/Tablet, Absolute on Desktop) */}
             <div
                 ref={headphoneRef}
-                className="relative md:absolute inset-y-0 md:left-[-5%] w-full md:w-[85%] z-20 flex items-center justify-center pointer-events-none my-6 md:my-0"
+                className="relative lg:absolute inset-y-0 lg:left-[-5%] w-full lg:w-[85%] z-20 flex items-center justify-center pointer-events-none my-6 lg:my-0"
             >
                 {/* Desktop Image */}
                 <Image
@@ -202,31 +202,31 @@ export default function HeadphoneBanner() {
                     alt="Headphone Desktop"
                     width={1200}
                     height={700}
-                    className="hidden md:block w-auto md:h-[120%] object-contain select-none pointer-events-none"
+                    className="hidden lg:block w-auto lg:h-[120%] object-contain select-none pointer-events-none"
                     priority
                 />
-                {/* Mobile Image (Different premium headset) */}
+                {/* Mobile/Tablet Image (Different premium headset) */}
                 <Image
                     src="/headphone_premium.png"
-                    alt="Headphone Mobile"
+                    alt="Headphone Mobile/Tablet"
                     width={600}
                     height={600}
-                    className="block md:hidden w-[85%] max-w-[320px] h-auto object-contain select-none pointer-events-none"
+                    className="block lg:hidden w-[85%] max-w-[320px] sm:max-w-[420px] h-auto object-contain select-none pointer-events-none"
                     priority
                 />
             </div>
 
-            {/* Details & Purchase Controls (Relative on Mobile, Absolute on Desktop) */}
-            <div className="relative md:absolute md:bottom-9 md:right-9 z-30 flex flex-col items-center md:items-end text-center md:text-right max-w-sm px-6 md:px-0 mt-6 md:mt-0 gap-4 md:gap-0">
+            {/* Details & Purchase Controls (Relative on Mobile/Tablet, Absolute on Desktop) */}
+            <div className="relative lg:absolute lg:bottom-9 lg:right-9 z-30 flex flex-col items-center lg:items-end text-center lg:text-right max-w-sm px-6 lg:px-0 mt-6 lg:mt-0 gap-4 lg:gap-0">
                 <p className="mb-4 text-[14px] leading-relaxed text-[#7c7c7c] font-light font-sans tracking-wide max-w-[320px]">
                     Lorem ipsum linus Karlsson Alexandra
-                    <br className="hidden md:block" />
+                    <br className="hidden lg:block" />
                     sjöberg i Signe Björk, Michael Jonsson.
-                    <br className="hidden md:block" />
+                    <br className="hidden lg:block" />
                     Viktor Blom Alexander Engström.
-                    <br className="hidden md:block" />
+                    <br className="hidden lg:block" />
                     Adam Gustavsson Astrid Lindgren.
-                    <br className="hidden md:block" />
+                    <br className="hidden lg:block" />
                     Adam Sundberg Viola Nyberg.
                 </p>
 
