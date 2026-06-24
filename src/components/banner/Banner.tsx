@@ -37,8 +37,8 @@ export default function HeadphoneBanner() {
 
             // GSAP manages percentage-based translate to avoid conflicts with Tailwind CSS classes
             gsap.set(glow, {
-                opacity: 0,
-                scale: 0.7,
+                opacity: 0.3,
+                scale: 1,
                 xPercent: -50,
                 yPercent: -50,
                 x: 0,
@@ -97,17 +97,6 @@ export default function HeadphoneBanner() {
                 ease: "power3.out",
                 overwrite: "auto",
             });
-
-            // Smoothly animate the glow back to center and fade out
-            gsap.to(glow, {
-                opacity: 0,
-                scale: 0.7,
-                x: 0,
-                y: 0,
-                duration: 1,
-                ease: "power3.out",
-                overwrite: "auto",
-            });
         };
 
         // Track cursor globally on the window to support movement in the margins/paddings
@@ -156,7 +145,7 @@ export default function HeadphoneBanner() {
                 {/* Hover Glow */}
                 <div
                     ref={glowRef}
-                    className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f26e11] blur-[140px] opacity-0"
+                    className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f26e11] blur-[140px] opacity-30"
                 />
             </div>
 

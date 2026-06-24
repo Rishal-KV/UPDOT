@@ -7,6 +7,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Prevent ScrollTrigger from jumping/recalculating when mobile address bar hides/shows
+if (typeof window !== "undefined") {
+    ScrollTrigger.config({ ignoreMobileResize: true });
+}
+
 export default function StackedFeatures() {
     const sectionRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -277,11 +282,10 @@ export default function StackedFeatures() {
                     className="relative w-full max-w-[1200px] flex-grow px-3 md:px-6 h-[460px] md:h-[500px] max-h-[500px] mb-8"
                     style={{ perspective: 1200 }}
                 >
-                    {/* CARD 0: Ergonomic Sculpting (Design) */}
                     <div
                         ref={card0Ref}
                         className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-10 transition-colors duration-300"
-                        style={{ transformStyle: "preserve-3d" }}
+                        style={{ transformStyle: typeof window !== "undefined" && window.innerWidth >= 768 ? "preserve-3d" : "flat" }}
                     >
                         {/* Magnetic Glow inside card */}
                         <div className="card-glow absolute h-[300px] w-[300px] rounded-full bg-[#f26e11] blur-[90px] opacity-0 pointer-events-none" />
