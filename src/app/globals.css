@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-schein: var(--font-schein-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Global spacing utilities for uniformity across the website, compiled via Tailwind v4 */
+@utility body-gap {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+
+  @media (min-width: 768px) {
+    gap: 96px;
+  }
+
+  @media (min-width: 1024px) {
+    gap: 120px;
+  }
+}
+
+@utility section-gap {
+  margin-top: 64px;
+
+  @media (min-width: 768px) {
+    margin-top: 96px;
+  }
+
+  @media (min-width: 1024px) {
+    margin-top: 120px;
+  }
+}
+
+@utility section-body-gapp {
+  margin-bottom: 40px;
+
+  @media (min-width: 768px) {
+    margin-bottom: 48px;
+  }
+
+  @media (min-width: 1024px) {
+    margin-bottom: 64px;
+  }
+}
+
+@utility section-body-gap {
+  margin-bottom: 40px;
+
+  @media (min-width: 768px) {
+    margin-bottom: 48px;
+  }
+
+  @media (min-width: 1024px) {
+    margin-bottom: 64px;
+  }
+}
+
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 6s linear infinite;
+}
+
+@keyframes soundwave {
+  0% {
+    transform: scaleY(0.3);
+  }
+  100% {
+    transform: scaleY(1.3);
+  }
+}
+
+@keyframes batteryFill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 85%;
+  }
+}

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import SmoothScroll from "@/components/scroll/SmoothScroll";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,6 +12,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const scheinSans = localFont({
+  src: "../../public/fonts/Schein Sans.otf",
+  variable: "--font-schein-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,8 +33,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${scheinSans.variable} h-full antialiased`}
     >
+      <SmoothScroll />
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
