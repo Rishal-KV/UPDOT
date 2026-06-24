@@ -49,8 +49,8 @@ export default function Footer() {
                         </div>
                     </div>
  
-                    {/* Links Column (Right Column - Organized in 3 sub-columns) */}
-                    <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                    {/* Links Column (Right Column - Organized in 2 columns on mobile, 3 on desktop) */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-8 gap-x-4 sm:gap-8">
                         <div>
                             <h4 className="text-[10px] tracking-[0.25em] font-semibold text-[#f26e11] uppercase mb-4 font-sans">
                                 Products
