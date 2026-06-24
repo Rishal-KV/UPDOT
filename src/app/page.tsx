@@ -11,27 +11,27 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full bg-white flex flex-col items-center justify-start pt-4 overflow-x-hidden select-none">
       <Navbar />
-      
+
       <div id="overview" className="w-full px-3 md:px-6 flex justify-center">
         <HeadphoneBanner />
       </div>
-      
+
       <IntroSection />
-      
+      <RangeCarousel />
+
       <div id="features" className="w-full">
         <StackedFeatures />
       </div>
-      
-      <RangeCarousel />
-      
+
+
       <div id="customizer" className="w-full">
         <SoundCustomizer />
       </div>
-      
+
       <div id="faq" className="w-full">
         <FAQSection />
       </div>
-      
+
       <Footer />
     </main>
   );
