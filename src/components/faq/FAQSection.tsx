@@ -38,7 +38,7 @@ export default function FAQSection() {
     };
 
     return (
-        <section className="w-full max-w-[1400px] mx-auto px-3 md:px-6 section-gap select-none">
+        <section className="relative w-full max-w-7xl mx-auto px-4 md:px-8 pb-8 section-gap select-none">
             {/* Dark Glassmorphic Container Panel */}
             <div className="w-full bg-neutral-950 rounded-[32px] border border-white/10 p-8 md:p-12 flex flex-col lg:flex-row gap-12 overflow-hidden relative">
                 {/* Background decorative blurs */}
