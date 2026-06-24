@@ -10,11 +10,11 @@ export default function Footer() {
                 <div className="absolute -top-24 -left-24 h-48 w-48 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
                 <div className="absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
 
-                {/* Top Section: Grid layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 relative z-10">
-
-                    {/* Brand column (spans 2 columns on large screens) */}
-                    <div className="lg:col-span-2 flex flex-col items-start gap-4">
+                {/* Top Section: Strict 2-Column Grid Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 relative z-10">
+ 
+                    {/* Brand Column (Left Column) */}
+                    <div className="flex flex-col items-start gap-4">
                         <div className="flex items-center gap-2.5 text-sm tracking-[5px] text-white font-medium font-schein">
                             <svg
                                 className="w-5 h-5 text-[#f26e11]"
@@ -33,7 +33,7 @@ export default function Footer() {
                         <p className="text-xs text-neutral-400 max-w-sm leading-relaxed font-light font-sans">
                             Engineering elite acoustic stages and high-fidelity soundscapes. We merge premium craftsmanship with state-of-the-art DSP systems to redefine auditory luxury.
                         </p>
-
+ 
                         {/* Social Links with glowing hovers */}
                         <div className="flex gap-3 mt-2">
                             {["twitter", "instagram", "youtube", "linkedin"].map((social) => (
@@ -48,42 +48,44 @@ export default function Footer() {
                             ))}
                         </div>
                     </div>
-
-                    {/* Navigation Columns */}
-                    <div>
-                        <h4 className="text-[10px] tracking-[0.25em] font-semibold text-[#f26e11] uppercase mb-4 font-sans">
-                            Products
-                        </h4>
-                        <ul className="flex flex-col gap-2.5 text-xs font-light text-neutral-400 font-sans">
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Model Lite</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Model XRS</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Model Pro</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">SoundStage EQ</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-[10px] tracking-[0.25em] font-semibold text-[#f26e11] uppercase mb-4 font-sans">
-                            Technology
-                        </h4>
-                        <ul className="flex flex-col gap-2.5 text-xs font-light text-neutral-400 font-sans">
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Acoustic Drivers</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">ANC Algorithms</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Spatial Audio</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">High-Res Codecs</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-[10px] tracking-[0.25em] font-semibold text-[#f26e11] uppercase mb-4 font-sans">
-                            Company
-                        </h4>
-                        <ul className="flex flex-col gap-2.5 text-xs font-light text-neutral-400 font-sans">
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">About Us</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Press Kit</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Careers</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Contact</a></li>
-                        </ul>
+ 
+                    {/* Links Column (Right Column - Organized in 3 sub-columns) */}
+                    <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                        <div>
+                            <h4 className="text-[10px] tracking-[0.25em] font-semibold text-[#f26e11] uppercase mb-4 font-sans">
+                                Products
+                            </h4>
+                            <ul className="flex flex-col gap-2.5 text-xs font-light text-neutral-400 font-sans">
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Model Lite</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Model XRS</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Model Pro</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">SoundStage EQ</a></li>
+                            </ul>
+                        </div>
+ 
+                        <div>
+                            <h4 className="text-[10px] tracking-[0.25em] font-semibold text-[#f26e11] uppercase mb-4 font-sans">
+                                Technology
+                            </h4>
+                            <ul className="flex flex-col gap-2.5 text-xs font-light text-neutral-400 font-sans">
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Drivers</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">ANC Tech</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Spatial</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Codecs</a></li>
+                            </ul>
+                        </div>
+ 
+                        <div>
+                            <h4 className="text-[10px] tracking-[0.25em] font-semibold text-[#f26e11] uppercase mb-4 font-sans">
+                                Company
+                            </h4>
+                            <ul className="flex flex-col gap-2.5 text-xs font-light text-neutral-400 font-sans">
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">About</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Press</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Careers</a></li>
+                                <li><a href="#" className="hover:text-white transition-colors duration-200 cursor-pointer">Contact</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 

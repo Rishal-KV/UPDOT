@@ -268,23 +268,26 @@ export default function StackedFeatures() {
                     </p>
                 </div>
 
+                {/* Spacer to guarantee un-compressible gap on mobile/desktop */}
+                <div className="h-8 md:h-16 shrink-0" />
+
                 {/* Cards Stack Parent (This acts as the deck window) */}
                 <div
                     ref={cardsParentRef}
-                    className="relative w-full max-w-[1200px] flex-grow px-3 md:px-6 h-[460px] md:h-[500px] max-h-[500px] mb-8 section-body-gap"
+                    className="relative w-full max-w-[1200px] flex-grow px-3 md:px-6 h-[460px] md:h-[500px] max-h-[500px] mb-8"
                     style={{ perspective: 1200 }}
                 >
                     {/* CARD 0: Ergonomic Sculpting (Design) */}
                     <div
                         ref={card0Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-10 transition-colors duration-300"
+                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-10 transition-colors duration-300"
                         style={{ transformStyle: "preserve-3d" }}
                     >
                         {/* Magnetic Glow inside card */}
                         <div className="card-glow absolute h-[300px] w-[300px] rounded-full bg-[#f26e11] blur-[90px] opacity-0 pointer-events-none" />
 
-                        <div className="flex flex-col justify-between h-full w-full md:w-[45%] z-20 gap-4">
-                            <div className="flex flex-col gap-2.5">
+                        <div className="flex flex-col justify-between md:h-full w-full md:w-[45%] z-20 gap-3 md:gap-4">
+                            <div className="flex flex-col gap-2">
                                 <span className="text-[9px] tracking-[0.2em] font-semibold text-[#f26e11] uppercase font-sans">
                                     Masterpiece Design
                                 </span>
@@ -301,7 +304,7 @@ export default function StackedFeatures() {
                         </div>
 
                         {/* Large Parallax Headphone Image */}
-                        <div className="relative w-full md:w-[50%] h-[200px] md:h-full flex items-center justify-center z-10 mt-4 md:mt-0">
+                        <div className="relative w-full md:w-[50%] h-[150px] md:h-[80%] flex items-center justify-center z-10 mt-2 md:mt-0">
                             <div className="absolute w-[220px] h-[220px] rounded-full bg-[#f26e11]/5 blur-[70px] pointer-events-none" />
                             <Image
                                 ref={card0ImageRef}
@@ -309,7 +312,7 @@ export default function StackedFeatures() {
                                 alt="Headphone Hero"
                                 width={600}
                                 height={600}
-                                className="w-auto h-[105%] md:h-[125%] object-contain select-none transform"
+                                className="w-auto h-full md:h-[125%] object-contain select-none transform"
                                 priority
                             />
                         </div>
@@ -318,13 +321,13 @@ export default function StackedFeatures() {
                     {/* CARD 1: Active Noise Cancelling */}
                     <div
                         ref={card1Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-20 hover:border-[#f26e11]/30 transition-colors duration-300"
+                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-20 hover:border-[#f26e11]/30 transition-colors duration-300"
                     >
                         {/* Ambient glow in corner */}
                         <div className="absolute -right-24 -top-24 h-56 w-56 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
 
-                        <div className="flex flex-col justify-between h-full w-full md:w-[45%] z-20 gap-4">
-                            <div className="flex flex-col gap-2.5">
+                        <div className="flex flex-col justify-between md:h-full w-full md:w-[45%] z-20 gap-3 md:gap-4">
+                            <div className="flex flex-col gap-2">
                                 <span className="text-[9px] tracking-[0.2em] font-semibold text-[#f26e11] uppercase font-sans">
                                     Acoustic Shield
                                 </span>
@@ -341,7 +344,7 @@ export default function StackedFeatures() {
                         </div>
 
                         {/* Animated Soundwave Graphic */}
-                        <div className="w-full md:w-[45%] h-[180px] md:h-[80%] flex items-center justify-center bg-neutral-900/40 border border-white/5 rounded-2xl p-6 relative mt-4 md:mt-0">
+                        <div className="w-full md:w-[45%] h-[130px] md:h-[80%] flex items-center justify-center bg-neutral-900/40 border border-white/5 rounded-2xl p-4 relative mt-2 md:mt-0">
                             <div
                                 ref={card1WaveBarsRef}
                                 className="w-full h-full flex items-center justify-center gap-2 md:gap-3"
@@ -354,7 +357,7 @@ export default function StackedFeatures() {
                                             animationDelay: `${idx * 0.08}s`,
                                             transformOrigin: "center"
                                         }}
-                                        className="w-1.5 md:w-2.5 rounded-full bg-gradient-to-t from-[#f26e11]/20 to-[#f26e11] h-16 md:h-32"
+                                        className="w-1 md:w-2.5 rounded-full bg-gradient-to-t from-[#f26e11]/20 to-[#f26e11] h-10 md:h-28"
                                     />
                                 ))}
                             </div>
@@ -371,12 +374,12 @@ export default function StackedFeatures() {
                     {/* CARD 2: Battery Power Reserve */}
                     <div
                         ref={card2Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-30 hover:border-[#f26e11]/30 transition-colors duration-300"
+                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-30 hover:border-[#f26e11]/30 transition-colors duration-300"
                     >
                         <div className="absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
 
-                        <div className="flex flex-col justify-between h-full w-full md:w-[45%] z-20 gap-4">
-                            <div className="flex flex-col gap-2.5">
+                        <div className="flex flex-col justify-between md:h-full w-full md:w-[45%] z-20 gap-3 md:gap-4">
+                            <div className="flex flex-col gap-2">
                                 <span className="text-[9px] tracking-[0.2em] font-semibold text-[#f26e11] uppercase font-sans">
                                     Power Reserve
                                 </span>
@@ -393,35 +396,35 @@ export default function StackedFeatures() {
                         </div>
 
                         {/* Battery Level Dashboard Widget */}
-                        <div className="w-full md:w-[45%] h-[180px] md:h-[80%] flex flex-col justify-between bg-neutral-900/40 border border-white/5 rounded-2xl p-6 md:p-8 relative mt-4 md:mt-0">
+                        <div className="w-full md:w-[45%] h-[140px] md:h-[80%] flex flex-col justify-between bg-neutral-900/40 border border-white/5 rounded-2xl p-4 md:p-8 relative mt-2 md:mt-0">
                             <div className="flex justify-between items-center w-full">
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[9px] tracking-[0.15em] font-mono text-neutral-500 uppercase">System Status</span>
-                                    <span className="text-lg font-bold text-white font-sans tracking-tight">Battery Reserve</span>
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-[8px] md:text-[9px] tracking-[0.15em] font-mono text-neutral-500 uppercase">System Status</span>
+                                    <span className="text-sm md:text-lg font-bold text-white font-sans tracking-tight">Battery Reserve</span>
                                 </div>
-                                <svg className="w-7 h-7 text-[#f26e11] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <svg className="w-5 h-5 md:w-7 md:h-7 text-[#f26e11] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                                 </svg>
                             </div>
 
-                            <div className="flex flex-col gap-3 w-full">
-                                <div className="w-full h-3 bg-white/5 border border-white/5 rounded-full overflow-hidden p-0.5">
+                            <div className="flex flex-col gap-2 w-full">
+                                <div className="w-full h-2 bg-white/5 border border-white/5 rounded-full overflow-hidden p-0.5">
                                     <div
                                         ref={card2BatteryFillRef}
                                         className="h-full bg-[#f26e11] rounded-full"
                                         style={{ width: "0%" }}
                                     />
                                 </div>
-                                <div className="flex justify-between items-center text-[10px] text-neutral-400 font-mono">
+                                <div className="flex justify-between items-center text-[9px] md:text-[10px] text-neutral-400 font-mono">
                                     <span className="flex items-center gap-1">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[#f26e11] animate-ping" />
+                                        <span className="h-1 w-1 rounded-full bg-[#f26e11] animate-ping" />
                                         <span>CHARGING</span>
                                     </span>
                                     <span ref={card2BatteryPercentRef} className="text-white font-bold">85% ACTIVE</span>
                                 </div>
                             </div>
 
-                            <div className="text-[9px] text-neutral-500 font-sans tracking-wide leading-normal border-t border-white/5 pt-2.5">
+                            <div className="hidden sm:block text-[9px] text-neutral-500 font-sans tracking-wide leading-normal border-t border-white/5 pt-2">
                                 Estimated standby: 720 hours • USB-C Quick Charge 3.0 Compatible
                             </div>
                         </div>
@@ -430,12 +433,12 @@ export default function StackedFeatures() {
                     {/* CARD 3: Beryllium Transducer */}
                     <div
                         ref={card3Ref}
-                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-40 hover:border-[#f26e11]/30 transition-colors duration-300"
+                        className="absolute inset-x-3 md:inset-x-6 top-0 bottom-0 bg-neutral-950 border border-white/10 rounded-[32px] p-5 md:p-12 flex flex-col md:flex-row items-center justify-between overflow-hidden z-40 hover:border-[#f26e11]/30 transition-colors duration-300"
                     >
                         <div className="absolute -right-24 -bottom-24 h-56 w-56 rounded-full bg-[#f26e11] blur-[80px] opacity-10 pointer-events-none" />
 
-                        <div className="flex flex-col justify-between h-full w-full md:w-[45%] z-20 gap-4">
-                            <div className="flex flex-col gap-2.5">
+                        <div className="flex flex-col justify-between md:h-full w-full md:w-[45%] z-20 gap-3 md:gap-4">
+                            <div className="flex flex-col gap-2">
                                 <span className="text-[9px] tracking-[0.2em] font-semibold text-[#f26e11] uppercase font-sans">
                                     Transducer Technology
                                 </span>
@@ -452,17 +455,17 @@ export default function StackedFeatures() {
                         </div>
 
                         {/* Interactive Rotating Driver Graphic */}
-                        <div className="w-full md:w-[45%] h-[180px] md:h-[80%] flex items-center justify-center bg-neutral-900/40 border border-white/5 rounded-2xl relative mt-4 md:mt-0 overflow-hidden">
+                        <div className="w-full md:w-[45%] h-[140px] md:h-[80%] flex items-center justify-center bg-neutral-900/40 border border-white/5 rounded-2xl relative mt-2 md:mt-0 overflow-hidden">
                             <div className="absolute inset-0 bg-radial-gradient from-[#f26e11]/5 to-transparent pointer-events-none" />
 
                             <div
                                 ref={card3TransducerRef}
-                                className="relative w-32 h-32 md:w-44 md:h-44 rounded-full border border-white/10 flex items-center justify-center"
+                                className="relative w-24 h-24 md:w-44 md:h-44 rounded-full border border-white/10 flex items-center justify-center"
                             >
                                 {/* Inner driver core */}
-                                <div className="absolute w-20 h-20 md:w-28 md:h-28 rounded-full border border-dashed border-[#f26e11]/40 animate-[spin_20s_linear_infinite]" />
-                                <div className="absolute w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/15 flex items-center justify-center">
-                                    <div className="w-4 h-4 md:w-6 md:h-6 rounded-full bg-gradient-to-tr from-[#f26e11] to-orange-400 shadow-[0_0_20px_rgba(242,110,17,0.6)]" />
+                                <div className="absolute w-16 h-16 md:w-28 md:h-28 rounded-full border border-dashed border-[#f26e11]/40 animate-[spin_20s_linear_infinite]" />
+                                <div className="absolute w-10 h-10 md:w-16 md:h-16 rounded-full border border-white/15 flex items-center justify-center">
+                                    <div className="w-3 h-3 md:w-6 md:h-6 rounded-full bg-gradient-to-tr from-[#f26e11] to-orange-400 shadow-[0_0_20px_rgba(242,110,17,0.6)]" />
                                 </div>
 
                                 {/* Outer ring ticks */}

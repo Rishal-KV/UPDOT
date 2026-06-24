@@ -104,7 +104,7 @@ export default function RangeCarousel() {
             </div>
 
             {/* 3D Carousel Container (True screen-edge-to-screen-edge layout with an even more spacious gap from the heading) */}
-            <div className="relative w-full h-[360px] md:h-[480px] z-10 flex items-center justify-center overflow-visible mt-32 md:mt-48">
+            <div className="relative w-full h-[360px] md:h-[480px] z-10 flex items-center justify-center overflow-visible mt-16 md:mt-48">
                 {items.map((item, index) => {
                     let positionClass = "";
                     let isActive = false;
