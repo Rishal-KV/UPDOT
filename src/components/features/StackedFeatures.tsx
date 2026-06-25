@@ -137,7 +137,7 @@ export default function StackedFeatures() {
             c0.addEventListener("mouseleave", handleMouseLeave);
 
             // 3. Stacking ScrollTrigger timeline
-            const pinDistance = window.innerHeight * 2.5;
+            const pinDistance = window.innerHeight * 1.5;
 
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -145,7 +145,7 @@ export default function StackedFeatures() {
                     start: "top 8%", // pin when the container gets close to the top
                     end: `+=${pinDistance}`,
                     pin: true,
-                    scrub: 1, // smooth scroll scrubbing
+                    scrub: 0.5, // smooth scroll scrubbing
                     invalidateOnRefresh: true,
                     anticipatePin: 1,
                 }

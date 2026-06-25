@@ -146,7 +146,7 @@ export default function HeadphoneBanner() {
     return (
         <section
             ref={bannerRef}
-            className="relative w-full max-w-[1400px] h-auto min-h-[500px] lg:h-[580px] flex flex-col lg:block items-center justify-center overflow-visible select-none cursor-pointer py-10 lg:py-0"
+            className="relative w-full  h-auto min-h-[500px] lg:h-[580px] flex flex-col lg:grid lg:grid-cols-12 items-center justify-center overflow-visible select-none cursor-pointer py-10 lg:py-0 px-6 lg:px-16"
         >
             {/* Background Panel with Premium Clip Path */}
             <div
